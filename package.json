@@ -1,0 +1,16 @@
+{
+  "name": "xmas-playlist",
+  "version": "1.0.0",
+  "description": "a web app for my annual xmas playlist",
+  "main": "index.js",
+  "author": "@zerdmann",
+  "license": "MIT",
+  "devDependencies": {
+    "musicmetadata": "^2.0.4",
+    "spotify-playlist": "^0.0.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.0",
+    "promise": "^7.1.1"
+  }
+}
