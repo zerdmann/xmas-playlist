@@ -6,6 +6,7 @@
   "author": "@zerdmann",
   "license": "MIT",
   "devDependencies": {
+    "knox": "^0.9.2",
     "musicmetadata": "^2.0.4",
     "spotify-playlist": "^0.0.4"
   },
