@@ -5,10 +5,18 @@
 
 #Step 2
 	✅ Aqcuire missing files
-	Rename locally for zip
-	Hash files and push to s3
+	✅ Rename locally for zip
+	✅ Hash files and push to s3
+
+#Step 3
+	✅Rewrite to use dual Howlers for slight crossfade.
+	✅Add fireplace bed
+	✅Add skip button
+
+To Do
+	Write out real auth library, use obfuscator
+	Add logo to index.html
+	Add skip function and tracklist
 
 
-Server/Not
-Client side request file from s3
-Load quotes/playlist data in bundle
+
