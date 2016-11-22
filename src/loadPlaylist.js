@@ -951,18 +951,26 @@ var orderedList;
 var currentTrack;
 var trackIndex = 0;
 var init = function(){
-	orderedList = orderedList || _.shuffle(playlist);
+	console.log('init called')
+	orderedList = orderedList || _.shuffle(playlist).slice(0,10);
 }
 
 module.exports = {
+	skipTo(track){
+		let i = _.findIndex(orderedList, {filePath: track.filePath})
+		let first = orderedList.slice(0,i);
+		let second = orderedList.slice(i);
+		orderedList = _.concat(second,first);
+	},
 	get(){
+	console.log('get called', {orderedList})
 	if(!orderedList)
 		init()
 	return orderedList;
 	},
 	getTrack() {
-		console.log('get track called')
 		let t = orderedList.shift()
+		console.log('get track called', t)
 		t.howl = null;
 		return t;
 	},

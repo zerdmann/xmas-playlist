@@ -6,6 +6,7 @@ import browserSync from 'browser-sync';
 import pump from 'pump';
 import autoprefixer from 'gulp-autoprefixer';
 import historyApiFallback from 'connect-history-api-fallback';
+import fs from 'fs';
 
 
 import webpack from 'webpack-stream';
@@ -51,7 +52,9 @@ gulp.task('clean', () =>
 gulp.task('main',['clean'], (done) =>
    pump([
     gulp.src(paths.clientEntryPoint),
-    webpack(webpackConfig),
+    webpack(webpackConfig,  null, function(err, stats) {
+      // fs.writeFile('stats.json',JSON.stringify(stats.toJson()))
+    }),
     gulp.dest(paths.distDir),
     reload({stream:true}),
     ], (err) => { if(err) done();})

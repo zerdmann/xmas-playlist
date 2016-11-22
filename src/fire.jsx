@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 
 class Fire extends Component {
   constructor(props) {
@@ -22,7 +21,7 @@ class Fire extends Component {
                   <div className="blue circle"></div>
                 <div className="black circle"></div>
               </div> )})()}
-         {(()=>{if(this.props.fireStarted)
+         {/*(()=>{if(this.props.fireStarted)
         return(
                <div className="container">
                   <div className="red flame"></div>
@@ -31,7 +30,7 @@ class Fire extends Component {
                   <div className="white flame"></div>
                   <div className="blue circle"></div>
                 <div className="black circle"></div>
-              </div> )})()}
+              </div> )})()*/}
          
       {/*<img className="log" src='img/log.svg'/> */}
     </div>

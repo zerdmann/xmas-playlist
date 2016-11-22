@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import { Howl } from 'howler';
 const fireURL = 'https://s3-us-west-2.amazonaws.com/zach.christmas/tunes/fireplace.mp3';
 
@@ -18,8 +17,7 @@ class Fireplace extends Component {
   loadTrack(track){
     this.howl = new Howl({
       src: track,
-      autoplay: true,
-      volume: 0.2,
+      volume: 0.3,
       html5:true,
       loop:true
       });

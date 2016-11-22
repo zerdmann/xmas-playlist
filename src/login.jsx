@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import auth from './auth'
 import {browserHistory} from 'react-router';
 import PageContainer from './lib/page_container';
@@ -10,17 +9,22 @@ class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.login = this.login.bind(this);
+		this.handleChange = this.handleChange.bind(this)
 		this.ribbon = null;
 		this.tag = null;
 		this.unfurlRibbon = this.unfurlRibbon.bind(this)
 		this.state = {
-			secret: 'secret' 
+			secret: 'unrwap me' 
 		}
 	}
 
-	login(event){
+	handleChange(event){
 		this.setState({secret:event.target.value})
-		if(auth.login(event.target.value))
+
+	}
+
+	login(event)
+	{	if(event.key === 'Enter' && auth.login(this.state.secret))
 		{
 				console.log('valid login!')
 				Velocity(
@@ -41,6 +45,8 @@ class Login extends Component {
 			Velocity.Utilities.removeData(ReactDOM.findDOMNode(this), ['velocity', 'fxqueue']);
 		}
 	}
+
+
 
 	unfurlRibbon(){		
 		Velocity(this.ribbon,
@@ -65,7 +71,7 @@ class Login extends Component {
 	}
 
 	componentWillMount() {
-		console.log(this.props)
+		// console.log(this.props)
 	}
 
 	componentDidMount() {
@@ -101,7 +107,7 @@ class Login extends Component {
 		<div ref={((r) => { this.tag = r;}).bind(this)} className="tag">
 			<div><span>To: the internet</span>
 			<span>From: @zerdmann</span>
-			<input type="text" onChange={this.login} onFocus={(()=>{if(this.state.secret === 'secret') this.setState({secret:''})}).bind(this)} value={this.state.secret}/></div>
+			<input type="text" onKeyPress={this.login} onChange={this.handleChange} onFocus={(()=>{if(this.state.secret === 'unrwap me') this.setState({secret:''})}).bind(this)} value={this.state.secret}/></div>
 		</div>
          <div className='treeWrapper'>{[...Array(numRows)].map((x, i) =>
    				 <div className="row" key={i + 1}>{makeTrees(i)}</div>

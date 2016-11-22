@@ -14,9 +14,10 @@
 	✅Add skip button
 
 To Do
-	Write out real auth library, use obfuscator
-	Add logo to index.html
-	Add skip function and tracklist
+	<!-- Write out real auth library, use obfuscator -->
+	Add pause button
+
+	Add skipTo function and tracklist
 
 
 
