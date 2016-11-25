@@ -14,10 +14,15 @@
 	✅Add skip button
 
 To Do
-	<!-- Write out real auth library, use obfuscator -->
-	Add pause button
-
-	Add skipTo function and tracklist
-
+	✅ Write out real auth library, use obfuscator -->
+	✅ Add pause button
+	✅ Add skipTo function and tracklist
+	✅ Player UI
+	Controls UI (tighten up flexbox)
+	Playlist UI
+	Fire Animation
+	Christmas Quotes
+	Mobile Breakpoints
+	Add stockings?
 
 

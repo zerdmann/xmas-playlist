@@ -40,6 +40,7 @@
     "lodash": "^4.17.0",
     "promise": "^7.1.1",
     "react": "^15.4.0",
+    "react-addons-css-transition-group": "^15.4.1",
     "react-dom": "^15.4.0",
     "react-howler": "^3.2.0",
     "react-page-transitions": "^1.2.0",

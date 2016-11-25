@@ -108,8 +108,8 @@ background: linear-gradient(105deg,  #a90329 0%,#c9042e 31%,#8f0222 70%,#6d0019 
 
 .tag{
 	position: absolute;
-	left:50%;
-	top:45%;
+	left:53%;
+	top:25%;
 	margin-left: -150px;
 	width: 300px;
 	height: 150px;
@@ -118,6 +118,10 @@ background: linear-gradient(105deg,  #a90329 0%,#c9042e 31%,#8f0222 70%,#6d0019 
 	box-shadow: 4px 4px 5px #222;
 	transform: rotateZ(0deg);
 	opacity:0;
+	@media(min-width: 768px){
+		top:45%;
+		left:50%;
+	}
 	&:after{
 	    content: '';
 	    position: absolute;
@@ -159,4 +163,33 @@ background: linear-gradient(105deg,  #a90329 0%,#c9042e 31%,#8f0222 70%,#6d0019 
 		line-height:1.8em;
 		font-family:"Permanent Marker";
 	}
+}
+
+.open{
+	position: absolute;
+	cursor:pointer;
+	top:60%;
+	width: 100px;
+	height:50px;
+	background-color: $dkred;
+	left:50%;
+	margin-left: -50px;
+	z-index: 4;
+	font-family: "Oregano", script;
+	font-style: italic;
+	font-size: 32px;
+	color:$white;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 50px;
+	border-radius: 3px;
+	box-shadow: 4px 4px 5px #222;
+	@media(min-width: 768px){
+		display: none;
+	}
+}
+
+.open:active{
+	background-color: #781005;
+
 }

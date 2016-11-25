@@ -8,6 +8,8 @@ $dkred: #A11607;
 $green:#00A14B;
 $dkgreen:#006e33;
 
+$white: #fff;
+
 @import './reset';
 
 *{
@@ -31,3 +33,4 @@ body {
 
 @import './login';
 @import './fire';
+@import './playlist';

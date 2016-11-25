@@ -5,6 +5,7 @@ yarn-error.log
 spotifyData.json
 backupData.json
 data/
+dist/
 .env
 
 client-bundle.js

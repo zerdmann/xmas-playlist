@@ -3,14 +3,19 @@ export default {
  plugins:[ new webpack.DefinePlugin({
     'process.env': {
       'NODE_ENV': JSON.stringify('production'),
-      'S3_URL': JSON.stringify('//zach.christmas.s3-website-us-west-2.amazonaws.com/tunes/')
+      'S3_URL': JSON.stringify('/tunes/')
     }
-  })],
+  }),
+  new webpack.optimize.CommonsChunkPlugin('common.js'),
+  new webpack.optimize.DedupePlugin(),
+  new webpack.optimize.UglifyJsPlugin(),
+  new webpack.optimize.AggressiveMergingPlugin()
+ ],
 
   output: {
     filename: 'client-bundle.js',
   },
-  devtool: 'eval',
+  devtool: 'source-maps',
   module: {
     loaders: [
       {

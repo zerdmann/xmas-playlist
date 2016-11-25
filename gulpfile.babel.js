@@ -11,6 +11,7 @@ import fs from 'fs';
 
 import webpack from 'webpack-stream';
 import webpackConfig from './webpack.config.babel';
+import webpackProd from './webpack.config.prod.babel';
 
 const reload = browserSync.reload
 
@@ -57,7 +58,17 @@ gulp.task('main',['clean'], (done) =>
     }),
     gulp.dest(paths.distDir),
     reload({stream:true}),
-    ], (err) => { if(err) done();})
+    ], (err) => { if(err){console.log(err); done()};})
+);
+
+gulp.task('build', ['clean'], (done) =>
+   pump([
+    gulp.src(paths.clientEntryPoint),
+    webpack(webpackProd,  null, function(err, stats) {
+      fs.writeFile('stats.json',JSON.stringify(stats.toJson()))
+    }),
+    gulp.dest(paths.distDir),
+    ], (err) => { if(err){console.log(err); done()};})
 );
 
 gulp.task('serve', () => {

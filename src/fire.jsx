@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Fire extends Component {
   constructor(props) {
@@ -11,6 +12,11 @@ class Fire extends Component {
       <div className="grate">
       <img className="grille" src="img/grille.svg"/>
       <div className="oval"></div><div className="rect">
+      <ReactCSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+      >
       {(()=>{if(this.props.fireStarted)
         return(
                <div className="container">
@@ -21,6 +27,8 @@ class Fire extends Component {
                   <div className="blue circle"></div>
                 <div className="black circle"></div>
               </div> )})()}
+
+        </ReactCSSTransitionGroup>
          {/*(()=>{if(this.props.fireStarted)
         return(
                <div className="container">

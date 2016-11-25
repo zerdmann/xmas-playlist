@@ -3,6 +3,7 @@ import auth from './auth'
 import {browserHistory} from 'react-router';
 import PageContainer from './lib/page_container';
 import Velocity from 'velocity-animate';
+import ReactDOM from 'react-dom';
 
 
 class Login extends Component {
@@ -19,12 +20,14 @@ class Login extends Component {
 	}
 
 	handleChange(event){
-		this.setState({secret:event.target.value})
+		this.setState({secret:(event.target.value).toLowerCase()})
 
 	}
 
 	login(event)
-	{	if(event.key === 'Enter' && auth.login(this.state.secret))
+	{	
+		console.log('login attempt', {this, event},this.state.secret)
+		if(event.key === 'Enter' && auth.login(this.state.secret))
 		{
 				console.log('valid login!')
 				Velocity(
@@ -57,10 +60,16 @@ class Login extends Component {
 				easing: "swing",
 			}
 		);
-		Velocity(this.tag,
-			{'opacity': '1',
+		let tagOpts = (window.innerWidth > 768) 
+		?   {
+		      'opacity': '1',
 			  'rotateZ':'8deg'
-			},
+			} 
+		:   {
+			'opacity': '1',
+		    }
+		Velocity(this.tag,
+			tagOpts,
 			{
 				duration: 700,
 				delay:300,
@@ -109,6 +118,7 @@ class Login extends Component {
 			<span>From: @zerdmann</span>
 			<input type="text" onKeyPress={this.login} onChange={this.handleChange} onFocus={(()=>{if(this.state.secret === 'unrwap me') this.setState({secret:''})}).bind(this)} value={this.state.secret}/></div>
 		</div>
+		<div onClick={this.login.bind(this,{key:"Enter"})} className="open">Open</div>
          <div className='treeWrapper'>{[...Array(numRows)].map((x, i) =>
    				 <div className="row" key={i + 1}>{makeTrees(i)}</div>
   		  )}</div></div></PageContainer>
