@@ -18,8 +18,8 @@ To Do
 	✅ Add pause button
 	✅ Add skipTo function and tracklist
 	✅ Player UI
-	Controls UI (tighten up flexbox)
-	Playlist UI
+	✅ Controls UI (tighten up flexbox)
+	✅ Playlist UI
 	Fire Animation
 	Christmas Quotes
 	Mobile Breakpoints

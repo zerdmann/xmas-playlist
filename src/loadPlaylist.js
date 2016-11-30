@@ -963,15 +963,15 @@ module.exports = {
 		orderedList = _.concat(second,first);
 	},
 	get(){
-	console.log('get called', {orderedList})
+	// console.log('get called', {orderedList})
 	if(!orderedList)
 		init()
 	return orderedList;
 	},
 	getTrack() {
 		let t = orderedList.shift()
-		console.log('get track called', t)
-		t.howl = null;
+		// console.log('get track called', t)
+		// t.howl = null;
 		return t;
 	},
 	advance(track) {

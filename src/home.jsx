@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Playlist from './playlist';
 import Fire from './fire';
+import Quotes from './quotes';
 
 class Home extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class Home extends Component {
         </div>
         <div className="right">
           <img src='img/logo.svg' className="logo"/>
+          <Quotes />
         </div>
         </div>
     )
