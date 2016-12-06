@@ -951,7 +951,7 @@ var orderedList;
 var currentTrack;
 var trackIndex = 0;
 var init = function(){
-	console.log('init called')
+	// console.log('init called')
 	orderedList = orderedList || _.shuffle(playlist);
 }
 

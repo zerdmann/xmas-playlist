@@ -25,6 +25,11 @@ body {
     overflow: auto;
 	background-color: $red;
 	margin: 0;
+	@media (max-width: 767px){
+		overflow-y:scroll;
+		overflow-x:hidden;
+		-webkit-overflow-scrolling:touch;
+	}
 }
 
 

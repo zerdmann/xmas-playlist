@@ -18,7 +18,7 @@ class Fireplace extends Component {
     this.howl = new Howl({
       src: track,
       volume: 0.3,
-      html5:true,
+      // html5:true,
       loop:true
       });
 

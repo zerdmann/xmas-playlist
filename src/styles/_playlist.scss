@@ -1,6 +1,23 @@
 .player{
 	margin-top: 10px;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+    // margin-left: 2px;
+}
+ 
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #c32820;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $dkred;
+}
+
+
 .nowPlaying{
 
 	.artist{
@@ -124,6 +141,9 @@ svg.icon{
 	max-width: 85vw;
 	padding-top: 10px;
 	overflow-y:scroll;
+	@media (max-width: 767px){
+		-webkit-overflow-scrolling:touch;
+	}
 }
 
 .track {

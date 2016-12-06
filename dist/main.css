@@ -57,6 +57,11 @@ body {
   overflow: auto;
   background-color: #d92a21;
   margin: 0; }
+  @media (max-width: 767px) {
+    body {
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; } }
 
 .big-poppa {
   display: -webkit-box;
@@ -428,11 +433,13 @@ body {
   height: 281px;
   background: #d92a21;
   margin: auto;
-  overflow: hidden; }
+  overflow: hidden;
+  display: none; }
   @media (min-width: 768px) {
     .grate {
       margin-left: 5px;
-      margin-top: 0px; } }
+      margin-top: 0px;
+      display: block; } }
 
 .flame
 .rect, .oval {
@@ -498,6 +505,17 @@ body {
 
 .player {
   margin-top: 10px; }
+
+::-webkit-scrollbar {
+  width: 5px; }
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #c32820; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #A11607; }
 
 .nowPlaying {
   margin-bottom: 10px; }
@@ -597,6 +615,9 @@ svg.icon {
   max-width: 85vw;
   padding-top: 10px;
   overflow-y: scroll; }
+  @media (max-width: 767px) {
+    .trackList {
+      -webkit-overflow-scrolling: touch; } }
 
 .track {
   padding-top: 3px;

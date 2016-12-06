@@ -89,7 +89,7 @@ var quotes = [
 		by:"Charles Dickens"
 	},
 	{
-		text:"It was always said of him, that he knew how to keep Christmas well, if any man alive possessed the knowledge. May that be truly said of us, and all of us! And so, as Tiny Tim observed, God Bless Us, Every One!"
+		text:"It was always said of him, that he knew how to keep Christmas well, if any man alive possessed the knowledge. May that be truly said of us, and all of us! And so, as Tiny Tim observed, God Bless Us, Every One!",
 		by:"Charles Dickens"
 	},
 	{
@@ -101,7 +101,7 @@ var quotes = [
 		by:"NY Times Editorial Board"
 	},
 	{
-		text:"England was merry England, when Old Christmas brought his sports again. 'Twas Christmas broach'd the mightiest ale;'Twas Christmas told the merriest tale; A Christmas gambol oft could cheer The poor man's heart through half the year.",
+		text:"England was merry England, when Old Christmas brought his sports again. 'Twas Christmas broach'd the mightiest ale; 'Twas Christmas told the merriest tale; A Christmas gambol oft could cheer The poor man's heart through half the year.",
 		by: "Walter Scott"
 	},
 	{
@@ -121,7 +121,7 @@ module.exports = {
 		let t = current;
 		list.unshift(current);
 		current = list.pop();
-		console.log(t)
+		// console.log(t)
 		return t;
 	}
 }

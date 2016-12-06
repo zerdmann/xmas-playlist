@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import loadPlaylist from './loadPlaylist.js';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 import Fireplace from './fireplace';
 import PlayIcon from './icons/playicon';
 import SkipIcon from './icons/skipicon';
 const url = (process.env.S3_URL ? process.env.S3_URL : 'test'); //'//:zach.christmas.s3-website-us-west-2.amazonaws.com/tunes/');
-console.log({url})
 
 var volumes = [0.6,0.8,0.2];
-var didItPlay = false;
+var init = false;
 
 var toTime = function(ms){
   var min = (ms/1000/60) << 0,
@@ -24,7 +23,6 @@ var toMS = function(time){
   let min = time[0],
   sec = time[1]
   let t = (parseInt(min) * 60) + (parseInt(sec))
-  // console.log(t);
   return t;
 }
 
@@ -46,11 +44,13 @@ class Playlist extends Component {
       playhead: '0:00',
       howls: {sound1:null, sound2:null},
     }
+
     this.tick = this.tick.bind(this)
     this.nextTrack = this.nextTrack.bind(this);
     this.loadTrack = this.loadTrack.bind(this);
     this.togglePlay = this.togglePlay.bind(this);
     this.adjustVol = this.adjustVol.bind(this)
+    this.initHowls = this.initHowls.bind(this)
   }
 
   componentDidMount() {
@@ -59,16 +59,48 @@ class Playlist extends Component {
           nextAvailable = playingHowl;
           playingHowl = tmp;
     this.loadTrack(this.state.nextTrack, false)
-    this.setState({ request: requestAnimationFrame(this.tick), duration:t.duration})
+    this.setState({ request: setInterval(this.tick, 32), duration:t.duration})
+     // Howler.mobileAutoEnable = false;
+     // console.log("Howler:",Howler)
   }
 
+  dummy(){
+
+  }
+
+  initHowls(){
+    if(!init)
+    {
+    let s1 = this.state.howls.sound1._sounds[0]._node.src;
+    let s2 = this.state.howls.sound2._sounds[0]._node.src
+      // console.log('initializing sound1')
+      this.state.howls.sound1 = new Howl({
+      src: 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV',
+      volume: this.state.currentVol,
+      html5: true});
+      this.state.howls.sound2 = new Howl({
+      src: 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV',
+      volume: this.state.currentVol,
+      html5: true});
+
+    this.state.howls.sound1._sounds[0]._node.src = s1;
+    this.state.howls.sound1._sounds[0]._node.load();
+    this.state.howls.sound2._sounds[0]._node.src = s2;
+    this.state.howls.sound2._sounds[0]._node.load();
+    init = true;
+    this.state.howls[playingHowl].play()
+   
+  }
+
+}
+
   componentWillUnmount() {
-    window.cancelAnimationFrame(this.state.request)
+    window.clearInterval(this.state.request)
     this.state.request = null;    
-    this.state.howl1.stop()
-    this.state.howl2.stop()
-    this.state.howl1.unload()
-    this.state.howl2.unload()
+    // this.state.howl1.stop()
+    // this.state.howl2.stop()
+    // this.state.howl1.unload()
+    // this.state.howl2.unload()
   }
 
   adjustVol(){
@@ -78,94 +110,85 @@ class Playlist extends Component {
     this.setState({
       currentVol:v
     })
-    if(this.state.playing)
-    {
-      console.log('adjusting player volume')
+  
       this.state.howls[playingHowl].volume(v)
-      // console.log(this.state.currentTrack.howl.volume())
-    }
+      this.state.howls[nextAvailable].volume(v)
+    
   }
 
   tick(){
     let p = this.state.playhead;
-    if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 5 && !this.state.howls[nextAvailable].playing())
+    if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 3 && !this.state.howls[nextAvailable].playing())
        {
-        console.log('play next audio file') 
+        console.log('TICK: play next audio file') 
         this.state.howls[nextAvailable].play()
       }
-    else if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 1 && this.state.howls[nextAvailable].playing())
+    else if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 0.5 && this.state.howls[nextAvailable].playing())
        {
-        console.log('changing track info in player')
+        console.log('TICK: changing track info in player')
         let tmp = nextAvailable;
           nextAvailable = playingHowl;
           playingHowl =tmp;
         this.nextTrack()
-        didItPlay = true;
       }
     if(this.state.loadingBar){
       let n = ((this.state.howls[playingHowl].seek()/toMS(this.state.currentTrack.duration)) * 100);
       let w = (Math.round(n * 10) / 10)+'%'
-      // console.log(toTime(this.state.howls[playingHowl].seek() * 1000),toTime(this.state.howls[playingHowl].duration() * 1000) )
       if(this.state.loadingBar.style.width != w)
         this.state.loadingBar.style.width = w;
     }
     if(this.state.howls[playingHowl].playing())
     {
+      // console.log('TICK: Playhead update', this.state.howls[playingHowl].seek())
       p = toTime(this.state.howls[playingHowl].seek() * 1000)
     }
-    this.setState({ request: requestAnimationFrame(this.tick), playhead:p})
+    this.setState({ playhead:p})
   }
 
   loadTrack(track, play=true){
-    console.log('loading track ',track,' into howl ',nextAvailable,':',play)
+    console.log('LOAD TRACK: loading track: \{',track.name,'\} into howl ',nextAvailable,': play =',play)
     if(!this.state.howls[nextAvailable]){ 
-      console.log('creating new howl')
+      console.log('LOAD TRACK: creating new howl')
       this.state.howls[nextAvailable] = new Howl({
         src: url+track.filePath,
         volume: this.state.currentVol,
         html5:true,
-        onend: function(pl){
-          console.log('on end function', didItPlay)
-          // if(!didItPlay)
-          //   pl.nextTrack()
-          // didItPlay = false;
-        }.bind(_,this)
+
       });}
     else{
-      // console.log('overloading howl', this.state.howls[nextAvailable], nextAvailable)
       this.state.howls[nextAvailable].stop();
+      this.state.howls[nextAvailable]._sounds[0]._ended = true;
       this.state.howls[nextAvailable]._sounds[0]._node.src = url + track.filePath;
+      this.state.howls[nextAvailable]._duration = toMS(track.duration);
       this.state.howls[nextAvailable]._sounds[0]._node.load();
-      // console.log(Howler, toTime(this.state.howls[nextAvailable]._sprite.__default[1]))
     }
     if(this.state.playing && play)
-      { this.state.howls[nextAvailable].play()
+      { 
+        this.state.howls[nextAvailable].play()
+        this.state.howls[nextAvailable]._sounds[0]._ended = false;
          let tmp = nextAvailable;
           nextAvailable = playingHowl;
-          playingHowl =tmp;
-        console.log({nextAvailable, playingHowl})       
+          playingHowl = tmp;
+        console.log('LOAD TRACK: playing from load', this.state.howls[nextAvailable])       
       }
      
     return track;
   }
 
   nextTrack(){
-    console.log('next track called', this.state.nextTrack.name)
+    console.log('NEXT TRACK: next track called', '\{'+this.state.nextTrack.name+'\}')
     if(!this.state.howls[nextAvailable].playing())
         {
-          console.log('playing next track howl')
+          console.log('NEXT TRACK: playing next track howl')
           this.state.howls[nextAvailable].play()
           let tmp = nextAvailable;
           nextAvailable = playingHowl;
           playingHowl = tmp;
         }
-    // console.log('next track')
-    // let h = this.state.nextHowl;
     loadPlaylist.advance(this.state.currentTrack)
     this.setState({
       playing: true,
       currentTrack: this.state.nextTrack,
-      // currentHowl: {track: this.state.nextHowl.track, sound:this.state.nextHowl.sound, type:'current'},
       nextTrack: this.loadTrack(loadPlaylist.getTrack(),false),
       duration: this.state.nextTrack.duration,
       playhead: '0:00'
@@ -174,10 +197,11 @@ class Playlist extends Component {
   }
 
   togglePlay(){
+    // console.log(this.state.playing, this.state.howls[playingHowl],this.state.howls[playingHowl].playing(), Howler )
     if(this.state.playing)
       this.state.howls[playingHowl].pause()
     else{
-      this.state.howls[playingHowl].play()
+     this.state.howls[playingHowl].play()
     }
     this.setState({
       playing: !this.state.playing,
@@ -185,10 +209,12 @@ class Playlist extends Component {
   }
 
   skipTo(track){
-    // console.log('skip called',track.name)
     document.querySelector('.trackList').scrollTop = 0;
     this.state.howls['sound1'].stop()
     this.state.howls['sound2'].stop()
+    this.state.howls['sound1']._sounds[0]._node.pause()
+    this.state.howls['sound2']._sounds[0]._node.pause()
+
     loadPlaylist.advance(this.state.currentTrack)
     loadPlaylist.advance(this.state.nextTrack)
     loadPlaylist.skipTo(track)
@@ -215,8 +241,8 @@ class Playlist extends Component {
 
 
     return (
-        <div className="playlist">
-          <div className="player">
+        <div className="playlist" onClick={this.dummy} onTouchEnd={this.initHowls}>
+          <div className="player" >
             <div className='nowPlaying'>
                 <span className='artist'>{this.state.currentTrack.artist}</span>
                 <span className='trackTitle'>{this.state.currentTrack.name}</span>
