@@ -159,7 +159,7 @@ class Playlist extends Component {
     if(this.state.playing && !this.state.howls[playingHowl].playing())
     {
       console.log("TICK: should be playing, and it isn't!" ,playingHowl)
-      this.state.howls[playingHowl].play()
+      // this.state.howls[playingHowl].play()
     }
     if(this.state.howls[playingHowl].playing())
     {
