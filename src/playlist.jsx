@@ -9,6 +9,11 @@ const url = (process.env.S3_URL ? process.env.S3_URL : 'test'); //'//:zach.chris
 var volumes = [0.6,0.8,0.2];
 var init = false;
 
+var tickStatus = {
+  playedFile:false,
+  changedData:false,
+}
+
 var toTime = function(ms){
   var min = (ms/1000/60) << 0,
    sec = Math.trunc((ms/1000) % 60, 2);
@@ -77,11 +82,20 @@ class Playlist extends Component {
       this.state.howls.sound1 = new Howl({
       src: 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV',
       volume: this.state.currentVol,
-      html5: true});
+      html5: true,
+      onend: () => {
+        console.log('sound 1 ended')
+      }
+    });
       this.state.howls.sound2 = new Howl({
       src: 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV',
       volume: this.state.currentVol,
-      html5: true});
+      html5: true,
+       onend: () => {
+        console.log('sound 2 ended')
+      }
+
+    });
 
     this.state.howls.sound1._sounds[0]._node.src = s1;
     this.state.howls.sound1._sounds[0]._node.load();
@@ -118,24 +132,34 @@ class Playlist extends Component {
 
   tick(){
     let p = this.state.playhead;
+    // console.log(this.state.howls[playingHowl]._endTimers)
+    // console.log(Howler)
     if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 3 && !this.state.howls[nextAvailable].playing())
        {
         console.log('TICK: play next audio file') 
         this.state.howls[nextAvailable].play()
+        tickStatus.playedFile = true;
       }
     else if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 0.5 && this.state.howls[nextAvailable].playing())
        {
+        // console.log(this.state.howls[playingHowl].duration(), toMS(this.state.currentTrack.duration), this.state.howls[playingHowl]._sounds[0])
         console.log('TICK: changing track info in player')
         let tmp = nextAvailable;
           nextAvailable = playingHowl;
           playingHowl =tmp;
         this.nextTrack()
+        tickStatus.changedData = true;
       }
     if(this.state.loadingBar){
       let n = ((this.state.howls[playingHowl].seek()/toMS(this.state.currentTrack.duration)) * 100);
       let w = (Math.round(n * 10) / 10)+'%'
       if(this.state.loadingBar.style.width != w)
         this.state.loadingBar.style.width = w;
+    }
+    if(this.state.playing && !this.state.howls[playingHowl].playing())
+    {
+      console.log("TICK: should be playing, and it isn't!" ,playingHowl)
+      this.state.howls[playingHowl].play()
     }
     if(this.state.howls[playingHowl].playing())
     {
@@ -153,14 +177,25 @@ class Playlist extends Component {
         src: url+track.filePath,
         volume: this.state.currentVol,
         html5:true,
+        onend: () => {
+          console.log('sound ended', tickStatus)
+          if(!tickStatus.playedFile || !tickStatus.changedData)
+            this.nextTrack()
+          tickStatus.playedFile, tickStatus.changedData = false;
+      }
 
       });}
     else{
-      this.state.howls[nextAvailable].stop();
-      this.state.howls[nextAvailable]._sounds[0]._ended = true;
-      this.state.howls[nextAvailable]._sounds[0]._node.src = url + track.filePath;
-      this.state.howls[nextAvailable]._duration = toMS(track.duration);
-      this.state.howls[nextAvailable]._sounds[0]._node.load();
+      let h = this.state.howls[nextAvailable]
+      h._sounds[0]._node.src = url + track.filePath;
+      h._sounds[0]._node.title = track.name;
+      h._duration = toMS(track.duration);
+      h._sprite.__default[1] = toMS(track.duration) * 1000;
+      h._sounds[0]._start = 0;
+      h._sounds[0]._stop = toMS(track.duration); 
+      h._sounds[0]._node.load();
+      console.log(this.state.howls[nextAvailable]._endTimers, this.state.howls[nextAvailable]._sounds[0]._stop, h._sprite)
+
     }
     if(this.state.playing && play)
       { 
@@ -171,7 +206,7 @@ class Playlist extends Component {
           playingHowl = tmp;
         console.log('LOAD TRACK: playing from load', this.state.howls[nextAvailable])       
       }
-     
+     console.log("LOAD TRACK: track info", {'howlDuration':this.state.howls[nextAvailable].duration(), 'trackDuration':toMS(track.duration), 'sound':this.state.howls[nextAvailable]._sounds[0] })
     return track;
   }
 
