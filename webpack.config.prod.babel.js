@@ -8,7 +8,16 @@ export default {
   }),
   new webpack.optimize.CommonsChunkPlugin('common.js'),
   new webpack.optimize.DedupePlugin(),
-  new webpack.optimize.UglifyJsPlugin(),
+  new webpack.optimize.UglifyJsPlugin({minimize: true,
+  sourceMap: false,
+  output: {
+    comments: false
+  },
+  compressor: {
+    warnings: false,
+    drop_console: true
+  }
+}),
   new webpack.optimize.AggressiveMergingPlugin()
  ],
 

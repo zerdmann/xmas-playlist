@@ -6,7 +6,8 @@ import PlayIcon from './icons/playicon';
 import SkipIcon from './icons/skipicon';
 const url = (process.env.S3_URL ? process.env.S3_URL : 'test'); //'//:zach.christmas.s3-website-us-west-2.amazonaws.com/tunes/');
 
-var volumes = [0.6,0.8,0.2];
+var volumes = [0.6,0.8,0.2] //[0.6,0.8,0.2];
+var c = 0;
 var init = false;
 
 var tickStatus = {
@@ -84,7 +85,7 @@ class Playlist extends Component {
       volume: this.state.currentVol,
       html5: true,
       onend: () => {
-        console.log('sound 1 ended')
+        
       }
     });
       this.state.howls.sound2 = new Howl({
@@ -92,7 +93,7 @@ class Playlist extends Component {
       volume: this.state.currentVol,
       html5: true,
        onend: () => {
-        console.log('sound 2 ended')
+        
       }
 
     });
@@ -136,11 +137,11 @@ class Playlist extends Component {
     // console.log(Howler)
     if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 3 && !this.state.howls[nextAvailable].playing())
        {
-        console.log('TICK: play next audio file') 
+        console.log('TICK: play next audio file:', nextAvailable) 
         this.state.howls[nextAvailable].play()
         tickStatus.playedFile = true;
       }
-    else if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 0.5 && this.state.howls[nextAvailable].playing())
+    else if((toMS(this.state.currentTrack.duration) - this.state.howls[playingHowl].seek()) < 1 && this.state.howls[nextAvailable].playing())
        {
         // console.log(this.state.howls[playingHowl].duration(), toMS(this.state.currentTrack.duration), this.state.howls[playingHowl]._sounds[0])
         console.log('TICK: changing track info in player')
@@ -159,7 +160,14 @@ class Playlist extends Component {
     if(this.state.playing && !this.state.howls[playingHowl].playing())
     {
       console.log("TICK: should be playing, and it isn't!" ,playingHowl)
+      c++;
       // this.state.howls[playingHowl].play()
+    }
+    if((this.state.playing && !this.state.howls[playingHowl].playing()) && (c > 5))
+    {
+      console.log("TICK: Make it play!", playingHowl)
+      c = 0;
+      this.state.howls[playingHowl].play()
     }
     if(this.state.howls[playingHowl].playing())
     {
@@ -178,13 +186,18 @@ class Playlist extends Component {
         volume: this.state.currentVol,
         html5:true,
         onend: () => {
-          console.log('sound ended', tickStatus)
-          if(!tickStatus.playedFile || !tickStatus.changedData)
-            this.nextTrack()
+          console.log('sound ended:', nextAvailable)
+          if((!tickStatus.playedFile || !tickStatus.changedData) && this.state.playing)
+            { 
+              console.log("state current track",this.state.currentTrack.name)
+              this.nextTrack()
+            }
           tickStatus.playedFile, tickStatus.changedData = false;
       }
+      });
 
-      });}
+    this.state.howls[nextAvailable]._sounds[0]._node.title = track.name;
+  }
     else{
       let h = this.state.howls[nextAvailable]
       h._sounds[0]._node.src = url + track.filePath;
@@ -193,8 +206,12 @@ class Playlist extends Component {
       h._sprite.__default[1] = toMS(track.duration) * 1000;
       h._sounds[0]._start = 0;
       h._sounds[0]._stop = toMS(track.duration); 
+      h._sounds[0]._node.onended = () => {console.log('node end function', this)}
+
       h._sounds[0]._node.load();
-      console.log(this.state.howls[nextAvailable]._endTimers, this.state.howls[nextAvailable]._sounds[0]._stop, h._sprite)
+
+      // console.log( h._sounds[0])
+      // console.log(this.state.howls[nextAvailable]._endTimers, this.state.howls[nextAvailable]._sounds[0]._stop, h._sprite)
 
     }
     if(this.state.playing && play)
@@ -206,7 +223,7 @@ class Playlist extends Component {
           playingHowl = tmp;
         console.log('LOAD TRACK: playing from load', this.state.howls[nextAvailable])       
       }
-     console.log("LOAD TRACK: track info", {'howlDuration':this.state.howls[nextAvailable].duration(), 'trackDuration':toMS(track.duration), 'sound':this.state.howls[nextAvailable]._sounds[0] })
+     console.log("LOAD TRACK: track info", {'trackDuration':track.duration, 'sound':this.state.howls[nextAvailable]._sounds[0]._node.title })
     return track;
   }
 
@@ -214,11 +231,14 @@ class Playlist extends Component {
     console.log('NEXT TRACK: next track called', '\{'+this.state.nextTrack.name+'\}')
     if(!this.state.howls[nextAvailable].playing())
         {
-          console.log('NEXT TRACK: playing next track howl')
-          this.state.howls[nextAvailable].play()
+          console.log('NEXT TRACK: playing next track howl :',nextAvailable)
+         
           let tmp = nextAvailable;
           nextAvailable = playingHowl;
           playingHowl = tmp;
+          this.state.howls[nextAvailable].stop()
+          this.state.howls[playingHowl].play()
+          console.log('playingHowl ',playingHowl)
         }
     loadPlaylist.advance(this.state.currentTrack)
     this.setState({
