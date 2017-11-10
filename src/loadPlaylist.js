@@ -1,4 +1,6 @@
 import _ from 'lodash'
+import shuffle from 'shuffle-seed';
+
 var playlist = [
 	{
 		"name": "(Merry Christmas) We Must Be Having One",
@@ -948,34 +950,73 @@ var playlist = [
 ];
 
 var orderedList;
+var displayList;
 var currentTrack;
-var trackIndex = 0;
-var init = function(){
-	// console.log('init called')
-	orderedList = orderedList || _.shuffle(playlist);
+var trackIndex;
+var trackMax;
+var seed;
+
+function init(){
+	let idx = localStorage.getItem('naughtylist');
+	seed = localStorage.getItem('pinecone');
+	console.log('INIT: seed from storage: ', seed, ', index: ',idx)
+	if(typeof seed === 'undefined') {
+		seed = newSeed();
+		localStorage.setItem('pinecone', seed);
+	}
+	trackIndex = idx ? parseInt(idx) : 0;
+	orderedList = orderedList || shuffle.shuffle(playlist, seed);
+	displayList = Array.from(orderedList);
+	trackMax = orderedList.length;
+	moveTo(trackIndex);
 }
+
+function newSeed(){
+	return Date.now() + (Math.random() * 10000)
+}
+
+function moveTo(idx) {
+	let first = orderedList.slice(0,idx);
+	let second = orderedList.slice(idx);
+	displayList = _.concat(second,first);
+}
+
+function advance(idx) {
+		idx++;
+		if(idx === trackMax)
+			idx = 0;
+		return idx
+	}
 
 module.exports = {
 	skipTo(track){
 		let i = _.findIndex(orderedList, {filePath: track.filePath})
-		let first = orderedList.slice(0,i);
-		let second = orderedList.slice(i);
-		orderedList = _.concat(second,first);
+		moveTo(i);
+		console.log('skip to:', track, i)
+		trackIndex = i;
 	},
 	get(){
-	// console.log('get called', {orderedList})
 	if(!orderedList)
 		init()
-	return orderedList;
+	return displayList;
+	},
+	save(){
+		localStorage.setItem('pinecone',seed);
+		localStorage.setItem('naughtylist',trackIndex);
 	},
 	getTrack() {
-		let t = orderedList.shift()
-		// console.log('get track called', t)
-		// t.howl = null;
+		let t = orderedList[trackIndex];
+		console.log('fetched track from :', {trackIndex, t})
 		return t;
 	},
-	advance(track) {
-		orderedList.push(track);
+	queueTrack() {
+		let t = advance(trackIndex);
+		console.log(t, trackIndex);
+		return orderedList[t];
 	},
-
+	advance() {
+		trackIndex = advance(trackIndex)
+		moveTo(trackIndex);
+	}
+	
 }

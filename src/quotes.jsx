@@ -18,12 +18,14 @@ class Quotes extends Component {
   }
 
   tick(){
-    if(this.state.request % 9000 === 0)
-      this.setState({
-      q:quoteManager.get()
-    })
+    let s = {}
 
-    this.setState({ request: requestAnimationFrame(this.tick) })
+    if(this.state.request % 9000 === 0)
+      s.q = quoteManager.get();
+  
+    s.request = requestAnimationFrame(this.tick)
+
+    this.setState(s);
   }
 
 

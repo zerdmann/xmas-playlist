@@ -14,7 +14,6 @@
 	✅Add skip button
 
 To Do
-	✅ Write out real auth library, use obfuscator -->
 	✅ Add pause button
 	✅ Add skipTo function and tracklist
 	✅ Player UI

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Howl } from 'howler';
-const fireURL = 'https://s3-us-west-2.amazonaws.com/zach.christmas/tunes/fireplace.mp3';
+const fireURL = "https://s3-us-west-2.amazonaws.com/zach.christmas/tunes/fireplace.mp3";
 
 class Fireplace extends Component {
   constructor(props) {
