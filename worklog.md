@@ -14,14 +14,27 @@
 	✅Add skip button
 
 To Do
-	✅ Add pause button
-	✅ Add skipTo function and tracklist
-	✅ Player UI
-	✅ Controls UI (tighten up flexbox)
-	✅ Playlist UI
-	Fire Animation
-	Christmas Quotes
-	Mobile Breakpoints
-	Add stockings?
+	Add seek by clicking
+	Port to react native
+	Add "silent night mode"
+	Add "jingle bell rock mode"
+	Add "reshuffle" button
 
 
+
+Songs to Add
+Wolcum Yole - Benjamin Britton
+Balulalow - Benjamin Britton ?
+QSF Plays Brubeck - What Child is This
+Sharon Jones - White Christmas
+Bill Murray and Phoenix - Alone on Christmas Day
+Christmas will Break your Heart - LCD Soundsystem
+Marie-Noel - Laurence NErbonne
+Bonhomme hiver - Ginette Reno
+gonzalo castro y los gatos - papel rosadito (tonada)
+Silent Night - Polyphonic Spree
+Ding Dong Merrily - Baltimore Consort
+Improvisations on Christmas Carols: Allegro - Hely-Hutchinson
+Christmas Eve Can Kill Ya - 
+Mistletoe and Holly - Frank Sinatra
+Melt By morning - The Duke Spirit

@@ -71,19 +71,26 @@ class Playlist extends Component {
   }
 
   trackEnd() {
-    this.unload();
+    console.log('trackend', this.name);
+    this.howl.unload();
+    this.howl = null;
   }
 
   crossfadeTracks() {
-    let v = this.state.currentVolume;
+    let v = this.state.currentVol;
+    let t = this.state.queuedTrack;
+    let cb = function(track) {
+      console.log("fade ended", {track, t});
+      this.updateTrackInfo(t);
+    }
+
     this.state.currentTrack.howl.fade(v, 0, 3000);
-    this.state.currentTrack.howl.once('fade', () => {
-      console.log("fade ended", this)
-      this.updateTrackInfo(this.state.queuedTrack);
-    })
+    this.state.currentTrack.howl.once('fade', cb.bind(this, [this.state.currentTrack]))
 
     this.state.queuedTrack.howl.play();
     this.state.queuedTrack.howl.fade(0, v, 3000);
+    console.log("playing queuedTrack", this.state.queuedTrack, this.state.queuedTrack.howl.playing(), v)
+
 
     this.nextTrack();
   }
@@ -156,7 +163,7 @@ class Playlist extends Component {
         src: url+track.filePath,
         volume: this.state.currentVol,
         html5:true,
-        onend: this.trackEnd
+        onend: this.trackEnd.bind(track)
       });
     return track; 
   }

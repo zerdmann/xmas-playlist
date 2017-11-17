@@ -957,18 +957,25 @@ var trackMax;
 var seed;
 
 function init(){
-	let idx = localStorage.getItem('naughtylist');
-	seed = localStorage.getItem('pinecone');
-	console.log('INIT: seed from storage: ', seed, ', index: ',idx)
-	if(typeof seed === 'undefined') {
+	let idx = localStorage['naughtylist'];
+	seed = localStorage['pinecone'];
+	if(typeof seed === 'undefined' || seed === null) {
 		seed = newSeed();
+		console.log('making new seed', seed);
 		localStorage.setItem('pinecone', seed);
 	}
 	trackIndex = idx ? parseInt(idx) : 0;
-	orderedList = orderedList || shuffle.shuffle(playlist, seed);
+	orderedList = orderedList || remix(seed);
 	displayList = Array.from(orderedList);
 	trackMax = orderedList.length;
 	moveTo(trackIndex);
+}
+
+function remix(seed) {
+	console.log('shuffling with ', seed);
+	let s = shuffle.shuffle(playlist, parseInt(seed));
+	console.log('first track:', s[0]);
+	return s;
 }
 
 function newSeed(){
@@ -1001,18 +1008,21 @@ module.exports = {
 	return displayList;
 	},
 	save(){
-		localStorage.setItem('pinecone',seed);
-		localStorage.setItem('naughtylist',trackIndex);
+		if(seed !== null)
+			localStorage.setItem('pinecone',seed);
+		if(trackIndex !== null)
+			localStorage.setItem('naughtylist',trackIndex);
 	},
 	getTrack() {
 		let t = orderedList[trackIndex];
-		console.log('fetched track from :', {trackIndex, t})
+		console.log('fetched track from :', trackIndex, t)
 		return t;
 	},
 	queueTrack() {
-		let t = advance(trackIndex);
-		console.log(t, trackIndex);
-		return orderedList[t];
+		let peek = advance(trackIndex);
+		let t = orderedList[peek];
+		console.log('queued track from ',peek, t);
+		return t;
 	},
 	advance() {
 		trackIndex = advance(trackIndex)

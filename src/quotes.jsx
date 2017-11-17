@@ -29,18 +29,6 @@ class Quotes extends Component {
   }
 
 
-  newQuote(){
-    // console.log('new quote')
-    // let a = Array.from(document.querySelectorAll('.hideable'))
-    // console.log(a)
-    // a.forEach((e) => {e.classList.add('hide')});
-    // this.setState({
-    //   q:quoteManager.get()
-    // })
-    // // setTimeout(a.forEach((e) => { console.log('timeout');e.classList.remove('hide');}), 100);
-  }
-
-
   render() {
   return( 
           <ReactCSSTransitionGroup className="quote-wrapper" transitionName="carousel"
