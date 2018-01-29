@@ -37,4 +37,3 @@ Ding Dong Merrily - Baltimore Consort
 Improvisations on Christmas Carols: Allegro - Hely-Hutchinson
 Christmas Eve Can Kill Ya - 
 Mistletoe and Holly - Frank Sinatra
-Melt By morning - The Duke Spirit
